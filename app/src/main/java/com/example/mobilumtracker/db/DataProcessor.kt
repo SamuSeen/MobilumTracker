@@ -13,16 +13,23 @@ class DataProcessor(context: Context,
                     databaseScope: CoroutineScope,
                     dbname: String)  {
     private var db: AppDatabase = AppDatabase.getDatabase(context, databaseScope, dbname)
-    private val eventsDao=db.eventsDao()
+    private val eventsDao=db.eventDao()
     private val mileageDao=db.mileageDao()
 
-    suspend fun get(eventID: Long): Mileage? = withContext(Dispatchers.IO) {
+    suspend fun getEvent(eventID: Long): Event? = withContext(Dispatchers.IO) {
         return@withContext eventsDao.findById(eventID)
+    }
+
+    suspend fun getEvents(): List<Event> = withContext(Dispatchers.IO) {
+        return@withContext eventsDao.findAll()
     }
 
     suspend fun getMileage(id: Short): Int = withContext(Dispatchers.IO) {
         return@withContext mileageDao.getMileage(id)
     }
 
+    suspend fun setMileage(id: Short, mileage: Int) = withContext(Dispatchers.IO) {
+        mileageDao.setMileage(id, mileage)
+    }
 
 }

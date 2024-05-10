@@ -15,13 +15,15 @@ interface MileageDao {
     fun getMileage(id: Short): Int
 
     @Update(entity = Mileage::class)
-    fun update(user: Mileage)
+    fun update(mileage: Mileage)
 
     @Insert
     fun insertAll(vararg users: Mileage)
 
     @Delete
-    fun delete(user: Mileage)
+    fun delete(mileage: Mileage)
     @Query("SELECT id FROM mileage ORDER BY id DESC LIMIT 1")
     fun getLastId(): Long
+    @Query("UPDATE mileage SET mileage = :mileage WHERE id = :id")
+    abstract fun setMileage(id: Short, mileage: Int)
 }

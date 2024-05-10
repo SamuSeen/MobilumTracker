@@ -12,12 +12,12 @@ import kotlinx.coroutines.withContext
  * Tablice to clasy z @Entity
  */
 @Database(entities = [
-    Events::class,
+    Event::class,
     Mileage::class],
-    version = 11,
+    version = 12,
     exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun eventsDao(): EventsDao
+    abstract fun eventDao(): EventDao
     abstract fun mileageDao(): MileageDao
 
     //Inicjalizacja ze wstępnymi wartościami
@@ -27,7 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
             INSTANCE?.let { database ->
                 scope.launch {
                     populateDatabase(
-                        database.eventsDao(),
+                        database.eventDao(),
                         database.mileageDao()
                     )
                 }
@@ -35,15 +35,17 @@ abstract class AppDatabase : RoomDatabase() {
         }
         //nie działa populowanie dunno why
         private suspend fun populateDatabase(
-            eventsDao: EventsDao,
+            eventDao: EventDao,
             mileageDao: MileageDao
         ) {
             withContext(Dispatchers.IO) {
-                eventsDao.insertAll(
-                    Events(
+                eventDao.insertAll(
+                    Event(
                     "Przegląd",
-                    "365",
+                    365,
+                        "20240505",
                     20000,
+                        19800,
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pretium.")
                 )
                 mileageDao.insertAll(
