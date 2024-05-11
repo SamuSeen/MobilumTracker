@@ -5,13 +5,16 @@ package com.example.mobilumtracker.db
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import androidx.room.ColumnInfo
 import com.example.mobilumtracker.Config
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.time.LocalDate
 import kotlin.coroutines.resume
 import kotlin.properties.Delegates
+import java.time.Duration
 
 @OptIn(ExperimentalCoroutinesApi::class)
 object Running {
@@ -64,29 +67,61 @@ object Running {
         }
     }
 
+    /**
+     * @param sort 0 - id, 1 - time remaining, 2 - distance remaining, 3 - alphabetically
+     */
     suspend fun getEvents(sort: Int = 0): List<Event> = suspendCancellableCoroutine { continuation ->
         scopeDatabase?.launch {
             val events: List<Event> = dataProcessor.getEvents()
-            when (sort) {
-                0 -> {//do nothing
-                }
-                1 -> {
-                    events.sortedBy { events = sortByTimeRemaining(events) }
-                }
+            val sortedEvents = when (sort) {
+                1 -> sortByTimeRemaining(events)
+                2 -> sortByDistanceRemaining(events)
+                3 -> sortAlphabetically(events)
+                else -> events
             }
-            continuation.resume(events)
+            continuation.resume(sortedEvents)
         }
     }
+
+    /**
+     * @param lastDate last date in format YYYY-MM-DD
+     * @param days frequency in days
+     * @param distance frequency in distance units
+     */
+    fun addEvent(name: String, description: String, days: Int, distance: Int,
+                 lastDate: String = LocalDate.now().toString(),lastMileage: Int = mileage) {
+        scopeDatabase?.launch {
+            dataProcessor.addEvent(Event(
+                name,
+                days,
+                lastDate,
+                distance,
+                lastMileage,
+                description
+            ))
+        }
+    }
+
+    fun deleteEvent(id: Long) {
+        scopeDatabase?.launch {
+            val event = dataProcessor.getEvent(id)
+            if (event != null)
+                dataProcessor.deleteEvent(event)
+        }
+    }
+
     private fun sortByTimeRemaining(events: List<Event>): List<Event> {
-        return events.sortedBy { event -> event.days.toInt() }
+        val currentDate = LocalDate.now()
+        return events.sortedBy { event ->
+            val nextDate = LocalDate.parse(event.lastTime).plusDays(event.days.toLong())
+            Duration.between(currentDate.atStartOfDay(), nextDate.atStartOfDay()).toDays()
+        }
     }
-
-    // Sorting function for smallest distance remaining
-    private fun sortByDistanceRemaining(events: List<Event>): List<Event> {
-        return events.sortedBy { event -> event.distance }
+    private fun sortByDistanceRemaining(events: List<Event>, currentMileage: Int = mileage): List<Event> {
+        return events.sortedBy { event ->
+            event.lastDistance + event.distance - currentMileage
+        }
     }
-
-    // Sorting function for alphabetical sorting by event name
     private fun sortAlphabetically(events: List<Event>): List<Event> {
         return events.sortedBy { event -> event.event }
     }

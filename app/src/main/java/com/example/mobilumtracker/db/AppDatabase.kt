@@ -43,7 +43,7 @@ abstract class AppDatabase : RoomDatabase() {
                     Event(
                     "Przegląd",
                     365,
-                        "20240505",
+                        "2024-05-05",
                     20000,
                         19800,
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pretium.")

@@ -19,9 +19,14 @@ class DataProcessor(context: Context,
     suspend fun getEvent(eventID: Long): Event? = withContext(Dispatchers.IO) {
         return@withContext eventsDao.findById(eventID)
     }
-
     suspend fun getEvents(): List<Event> = withContext(Dispatchers.IO) {
         return@withContext eventsDao.findAll()
+    }
+    suspend fun addEvent(event: Event) = withContext(Dispatchers.IO) {
+        eventsDao.insertAll(event)
+    }
+    suspend fun deleteEvent(event: Event) = withContext(Dispatchers.IO) {
+        eventsDao.delete(event)
     }
 
     suspend fun getMileage(id: Short): Int = withContext(Dispatchers.IO) {
@@ -31,5 +36,6 @@ class DataProcessor(context: Context,
     suspend fun setMileage(id: Short, mileage: Int) = withContext(Dispatchers.IO) {
         mileageDao.setMileage(id, mileage)
     }
+
 
 }
