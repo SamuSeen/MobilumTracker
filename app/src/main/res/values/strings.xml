@@ -11,4 +11,26 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_events">Events</string>
+    <string name="event_name">Event name</string>
+    <string name="Lorem_Ipsum_1p">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et finibus nibh, vel venenatis mauris. Fusce vel tellus eros. Maecenas ullamcorper gravida egestas. Etiam est est, semper at justo sit amet, volutpat eleifend urna. Sed fermentum eget metus quis fringilla. Morbi facilisis ultricies velit id consectetur. Etiam placerat ornare justo quis consectetur. Pellentesque id rutrum velit, at fermentum justo.</string>
+    <string name="Example_days">1000</string>
+    <string name="Example_distance">1000</string>
+    <string name="days">days</string>
+    <string name="kms">kms</string>
+    <string name="Remaining_info">"Remaining: "</string>
+    <string name="Days">Days</string>
+    <string name="Kms">kms</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_calendar">Calendar</string>
+    <string name="menu_add">Add event</string>
+    <string name="description">Description</string>
+    <string name="days_freqency">Frequency in days</string>
+    <string name="dist_frequency">Frequency in kms.</string>
+    <string name="Last_date">Last date of event</string>
+    <string name="last_mileage">Last mileage at event</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="trigger_event">Trigger Event</string>
 </resources>

@@ -9,5 +9,6 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.EventFragment"
-    tools:listitem="@layout/fragment_event" />
+    tools:context=".ui.event.EventFragment"
+    tools:listitem="@layout/fragment_event"
+    android:layout_marginTop="8dp"/>

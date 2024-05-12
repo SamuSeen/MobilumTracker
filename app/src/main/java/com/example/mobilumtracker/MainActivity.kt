@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Running.init(applicationContext, lifecycleScope)
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
@@ -39,9 +38,10 @@ class MainActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow), drawerLayout)
+                R.id.nav_event, R.id.nav_calendar, R.id.nav_add), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        Running.init(applicationContext, lifecycleScope)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".add.AddFragment"
+android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/editTextEvent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/event_name"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/editTextDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/description"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/editTextDays"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/days_freqency"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:minHeight="48dp"
+        android:tooltipText="@string/days_freqency" />
+
+    <EditText
+        android:id="@+id/editTextDistance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/dist_frequency"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/editTextLastDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/Last_date"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:minHeight="48dp"
+        tools:ignore="TextFields" />
+
+    <EditText
+        android:id="@+id/editTextLastDistance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/last_mileage"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:minHeight="48dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="48dp"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/toggleTrigger"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textOff="@string/edit"
+            android:textOn="@string/save" />
+
+        <Button
+            android:id="@+id/buttonDelete"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/trigger_event" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 package com.example.mobilumtracker.db
 
 import android.content.Context
+import android.util.Log
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +15,7 @@ import kotlinx.coroutines.withContext
 @Database(entities = [
     Event::class,
     Mileage::class],
-    version = 12,
+    version = 43,
     exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
@@ -36,9 +37,9 @@ abstract class AppDatabase : RoomDatabase() {
         //nie działa populowanie dunno why
         private suspend fun populateDatabase(
             eventDao: EventDao,
-            mileageDao: MileageDao
-        ) {
+            mileageDao: MileageDao) {
             withContext(Dispatchers.IO) {
+                Log.i("DB","Populating empty database.")
                 eventDao.insertAll(
                     Event(
                     "Przegląd",
@@ -46,11 +47,18 @@ abstract class AppDatabase : RoomDatabase() {
                         "2024-05-05",
                     20000,
                         19800,
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pretium.")
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pretium."),
+                    Event(
+                        "Olej",
+                        365,
+                            "2024-08-15",
+                        15000,
+                            19800,
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pretium.")
                 )
                 mileageDao.insertAll(
                     Mileage(
-                        0,
+                        20000,
                         0
                     )
                 )
@@ -64,6 +72,7 @@ abstract class AppDatabase : RoomDatabase() {
         private var INSTANCE: AppDatabase? = null
 
         fun getDatabase(context: Context,scope: CoroutineScope,dbname:String): AppDatabase {
+            Log.i("DB","Database initialization")
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,

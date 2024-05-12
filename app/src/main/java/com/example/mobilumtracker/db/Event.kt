@@ -14,22 +14,20 @@ data class Event(
 @Dao
 interface EventDao {
     @Query("SELECT * FROM event")
-    fun getAll(): List<Mileage>
+    fun getAll(): List<Event>
 
-    @Query("SELECT * FROM event " +
-            "WHERE id IN (:credIds)"
+    @Query("SELECT * FROM event WHERE id IN (:credIds)"
     )
     fun loadAllByIds(credIds: LongArray): List<Event>?
 
-    @Query("SELECT * FROM event " +
-            "WHERE id = :id")
+    @Query("SELECT * FROM event WHERE id = :id")
     fun findById(id: Long): Event?
 
     @Update(entity = Event::class)
     fun update(event: Event)
 
     @Insert
-    fun insertAll(vararg users: Event)
+    fun insertAll(vararg events: Event)
 
     @Delete
     fun delete(event: Event)

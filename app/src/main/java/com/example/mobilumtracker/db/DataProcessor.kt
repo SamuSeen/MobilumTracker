@@ -1,6 +1,7 @@
 package com.example.mobilumtracker.db
 
 import android.content.Context
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,16 +25,17 @@ class DataProcessor(context: Context,
     }
     suspend fun addEvent(event: Event) = withContext(Dispatchers.IO) {
         eventsDao.insertAll(event)
+        Log.i("DB","Adding event to database")
     }
     suspend fun deleteEvent(event: Event) = withContext(Dispatchers.IO) {
         eventsDao.delete(event)
     }
 
-    suspend fun getMileage(id: Short): Int = withContext(Dispatchers.IO) {
+    suspend fun getMileage(id: Int): Int = withContext(Dispatchers.IO) {
         return@withContext mileageDao.getMileage(id)
     }
 
-    suspend fun setMileage(id: Short, mileage: Int) = withContext(Dispatchers.IO) {
+    suspend fun setMileage(id: Int, mileage: Int) = withContext(Dispatchers.IO) {
         mileageDao.setMileage(id, mileage)
     }
 

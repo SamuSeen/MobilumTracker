@@ -1,48 +1,47 @@
-package com.example.mobilumtracker.ui
+package com.example.mobilumtracker.ui.event
 
+import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.example.mobilumtracker.R
+import com.example.mobilumtracker.databinding.ItemEventBinding
+import com.example.mobilumtracker.Utils
 
-import com.example.mobilumtracker.ui.placeholder.PlaceholderContent.PlaceholderItem
-import com.example.mobilumtracker.databinding.FragmentEventBinding
+import com.example.mobilumtracker.db.Event
+import java.time.Duration
+import java.time.LocalDate
 
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
- */
-class EventAdapter(
-    private val values: List<PlaceholderItem>
-) : RecyclerView.Adapter<EventAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+class EventAdapter(var events: List<Event>) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
-        return ViewHolder(
-            FragmentEventBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ItemEventBinding.inflate(inflater, parent, false)
+        return EventViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
-        holder.idView.text = item.id
-        holder.contentView.text = item.content
+    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
+        holder.bind(events[position])
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int {
+        return events.size
+    }
 
-    inner class ViewHolder(binding: FragmentEventBinding) : RecyclerView.ViewHolder(binding.root) {
-        val idView: TextView = binding.itemNumber
-        val contentView: TextView = binding.content
+    inner class EventViewHolder(private val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
+        fun bind(event: Event) {
+            binding.textViewEventName.text = event.event
+            binding.textViewEventDescription.text = event.description
+            val nextDate = LocalDate.parse(event.lastTime).plusDays(event.days.toLong())
+            val durationText =Duration.between(LocalDate.now().atStartOfDay(), nextDate.atStartOfDay()).toDays().toString()
+            binding.textViewDays.text = durationText
+            val distanceText = (event.lastDistance - event.distance).toString()
+            binding.textViewDistance.text = distanceText
         }
     }
-
+    //todo make events clickable
 }

@@ -5,7 +5,6 @@ package com.example.mobilumtracker.db
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import androidx.room.ColumnInfo
 import com.example.mobilumtracker.Config
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,20 +21,26 @@ object Running {
     @SuppressLint("StaticFieldLeak")
     lateinit var dataProcessor: DataProcessor
     private var scopeDatabase: CoroutineScope? = null
-    private var mileage by Delegates.notNull<Int>()
-    private var vehicleId by Delegates.notNull<Short>()
-    private var events: List<Event>? = null
+    private var mileage = 0
+    private var vehicleId = 0
 
     val isInitialized: Boolean
         get() = Running::dataProcessor.isInitialized
 
-    fun init(context: Context, coroutineScope: CoroutineScope, id: Short = 0) {
+    fun init(context: Context, coroutineScope: CoroutineScope, id: Int = 0) {
         scopeDatabase = coroutineScope
         dataProcessor = DataProcessor(context, coroutineScope, Config.DB_NAME.value.toString())
-        setVehicleId(id)
-        coroutineScope.launch {
+        setVehicle(id)
+        scopeDatabase?.launch {
             mileage= dataProcessor.getMileage(vehicleId)
-            events = dataProcessor.getEvents()
+            Log.i("DB","Loaded database with "+ dataProcessor.getEvents().size+" events")
+        }
+    }
+
+    fun setVehicle(id:Int ){
+        this.vehicleId = id
+        scopeDatabase?.launch {
+            mileage = dataProcessor.getMileage(id)
         }
     }
 
@@ -49,14 +54,14 @@ object Running {
         }
     }
     fun addMileage(mileage: Int) {
-        this.mileage += mileage
+        val dist = this.mileage + mileage
+        this.mileage = dist
+        scopeDatabase?.launch {
+            dataProcessor.setMileage(vehicleId, dist)
+        }
     }
 
-    fun setVehicleId(vehicleId: Short) {
-        this.vehicleId = vehicleId
-    }
-
-    fun getVehicleId(): Short {
+    fun getVehicleId(): Int {
         return vehicleId
     }
 

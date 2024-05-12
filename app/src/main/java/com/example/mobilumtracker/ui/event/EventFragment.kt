@@ -1,62 +1,54 @@
-package com.example.mobilumtracker.ui
+package com.example.mobilumtracker.ui.event
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.example.mobilumtracker.R
-import com.example.mobilumtracker.ui.placeholder.PlaceholderContent
+import com.example.mobilumtracker.db.Running
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * A fragment representing a list of Items.
  */
 class EventFragment : Fragment() {
 
-    private var columnCount = 1
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
-    }
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var eventAdapter: EventAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_event_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_event, container, false)
 
-        // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-                adapter = EventAdapter(PlaceholderContent.ITEMS)
-            }
-        }
+        // Initialize RecyclerView and adapter
+        recyclerView = view.findViewById(R.id.recyclerViewEvents)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        eventAdapter = EventAdapter(emptyList()) // Initially, empty list
+        recyclerView.adapter = eventAdapter
+
+        // Load events data from database and update adapter
+        loadEvents()
+
         return view
     }
 
-    companion object {
-
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            EventFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun loadEvents() {
+        // Call getEvents function to retrieve list of events
+        lifecycleScope.launch(Dispatchers.Main) {
+            val events = Running.getEvents() // Sort by default criteria
+            eventAdapter.events = events // Update adapter with new events data
+            eventAdapter.notifyDataSetChanged() // Notify adapter of data change
+        }
     }
 }
