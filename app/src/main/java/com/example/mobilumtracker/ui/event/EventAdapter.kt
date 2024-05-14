@@ -50,5 +50,4 @@ class EventAdapter(var events: List<Event>) : RecyclerView.Adapter<EventAdapter.
             binding.textViewDistance.text = distanceText
         }
     }
-    //todo make events clickable
 }
