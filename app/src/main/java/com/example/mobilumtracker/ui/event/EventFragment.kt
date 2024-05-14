@@ -15,6 +15,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import androidx.navigation.fragment.findNavController
 
 /**
  * A fragment representing a list of Items.
@@ -23,6 +24,8 @@ class EventFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var eventAdapter: EventAdapter
+
+    private val navController by lazy { findNavController() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

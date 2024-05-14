@@ -6,10 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import com.example.mobilumtracker.R
 import com.example.mobilumtracker.databinding.ItemEventBinding
 import com.example.mobilumtracker.Utils
-
+import androidx.navigation.fragment.findNavController
 import com.example.mobilumtracker.db.Event
 import java.time.Duration
 import java.time.LocalDate
@@ -24,7 +25,13 @@ class EventAdapter(var events: List<Event>) : RecyclerView.Adapter<EventAdapter.
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        holder.bind(events[position])
+        val event = events[position]
+        holder.bind(event)
+        holder.itemView.setOnClickListener {
+            // Navigate to the add fragment with the event ID as an argument
+            val action = EventFragmentDirections.actionNavEventToNavAdd(event.id)
+            it.findNavController().navigate(action)
+        }
     }
 
     override fun getItemCount(): Int {
