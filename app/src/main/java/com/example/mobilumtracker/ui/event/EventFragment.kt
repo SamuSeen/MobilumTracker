@@ -1,6 +1,5 @@
 package com.example.mobilumtracker.ui.event
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,9 +12,9 @@ import com.example.mobilumtracker.R
 import com.example.mobilumtracker.db.Running
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import androidx.navigation.fragment.findNavController
+import com.example.mobilumtracker.db.Event
 
 /**
  * A fragment representing a list of Items.
@@ -26,6 +25,17 @@ class EventFragment : Fragment() {
     private lateinit var eventAdapter: EventAdapter
 
     private val navController by lazy { findNavController() }
+
+    private var date: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Get the optional string from the arguments
+        arguments?.let {
+            date = it.getString("date")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,18 +50,22 @@ class EventFragment : Fragment() {
         recyclerView.adapter = eventAdapter
 
         // Load events data from database and update adapter
-        loadEvents()
+        loadEvents(date ?: "")
+
 
         return view
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun loadEvents() {
-        // Call getEvents function to retrieve list of events
+
+    fun loadEvents(date: String = "") {
         lifecycleScope.launch(Dispatchers.Main) {
-            val events = Running.getEvents() // Sort by default criteria
-            eventAdapter.events = events // Update adapter with new events data
-            eventAdapter.notifyDataSetChanged() // Notify adapter of data change
+            val events: List<Event> = if (date.isEmpty()) {
+                Running.getEvents()
+            } else {
+                Running.getEvents(date)
+            }
+            eventAdapter.events = events
+            eventAdapter.notifyDataSetChanged()
         }
     }
 }

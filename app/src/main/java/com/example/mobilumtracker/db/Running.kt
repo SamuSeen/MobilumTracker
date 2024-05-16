@@ -89,6 +89,14 @@ object Running {
     }
 
     /**
+     * @param date date in format YYYY-MM-DD
+     */
+    suspend fun getEvents(date: String, sort: Int = 0): List<Event> {
+        val events: List<Event> = getEvents(sort)
+        return events.filter { it.lastTime == date }
+    }
+
+    /**
      * @param lastDate last date in format YYYY-MM-DD
      * @param days frequency in days
      * @param distance frequency in distance units
