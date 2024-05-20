@@ -6,13 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import com.example.mobilumtracker.R
 import com.example.mobilumtracker.databinding.FragmentAddBinding
-import com.example.mobilumtracker.db.Event
 import com.example.mobilumtracker.db.Running
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
@@ -47,14 +43,14 @@ class AddFragment : Fragment() {
                     binding.editTextDescription.setText(event.description)
                     binding.editTextDays.setText(event.days.toString())
                     binding.editTextDistance.setText(event.distance.toString())
-                    binding.editTextLastDate.setText(event.lastTime)
+                    binding.editTextLastDate.setText(event.lastDate)
                     binding.editTextLastDistance.setText(event.lastDistance.toString())
                 }
             }
         } else {
             lifecycleScope.launch(Dispatchers.Main) {
-                val mileage = Running.getMileage()
-                binding.editTextLastDistance.setText(mileage)
+                //val mileage = Running.getMileage()
+                //binding.editTextLastDistance.setText(mileage)
             }
             // No arguments provided, initialize fields with default values
             initializeFields()

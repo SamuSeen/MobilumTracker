@@ -6,14 +6,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.example.mobilumtracker.Config
+import com.example.mobilumtracker.SSUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.time.LocalDate
 import kotlin.coroutines.resume
-import kotlin.properties.Delegates
 import java.time.Duration
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalCoroutinesApi::class)
 object Running {
@@ -32,9 +33,11 @@ object Running {
         dataProcessor = DataProcessor(context, coroutineScope, Config.DB_NAME.value.toString())
         setVehicle(id)
         scopeDatabase?.launch {
+            if (dataProcessor.getEvents().isEmpty()) dataProcessor.init()
             mileage= dataProcessor.getMileage(vehicleId)
-            Log.i("DB","Loaded database with "+ dataProcessor.getEvents().size+" events")
+            Log.i("DB","Lo  aded database with "+ dataProcessor.getEvents().size+" events")
         }
+        Log.i("DB","Database initialized")
     }
 
     fun setVehicle(id:Int ){
@@ -93,7 +96,7 @@ object Running {
      */
     suspend fun getEvents(date: String, sort: Int = 0): List<Event> {
         val events: List<Event> = getEvents(sort)
-        return events.filter { it.lastTime == date }
+        return events.filter { SSUtils.getTargetDate(it).format(DateTimeFormatter.ISO_LOCAL_DATE) == date }
     }
 
     /**
@@ -126,7 +129,7 @@ object Running {
     private fun sortByTimeRemaining(events: List<Event>): List<Event> {
         val currentDate = LocalDate.now()
         return events.sortedBy { event ->
-            val nextDate = LocalDate.parse(event.lastTime).plusDays(event.days.toLong())
+            val nextDate = LocalDate.parse(event.lastDate).plusDays(event.days.toLong())
             Duration.between(currentDate.atStartOfDay(), nextDate.atStartOfDay()).toDays()
         }
     }

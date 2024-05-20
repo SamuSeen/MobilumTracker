@@ -5,7 +5,7 @@ import androidx.room.*
 data class Event(
     @ColumnInfo(name = "Event") val event: String,
     @ColumnInfo(name = "Days") val days: Int,
-    @ColumnInfo(name = "LastTime") val lastTime: String,
+    @ColumnInfo(name = "LastDate") val lastDate: String,
     @ColumnInfo(name = "Distance") val distance: Int,
     @ColumnInfo(name = "LastDistance") val lastDistance: Int,
     @ColumnInfo(name = "Description") val description: String,

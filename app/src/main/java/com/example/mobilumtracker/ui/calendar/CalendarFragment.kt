@@ -1,38 +1,32 @@
 package com.example.mobilumtracker.ui.calendar
 
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.mobilumtracker.R
-import com.example.mobilumtracker.databinding.FragmentAddBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.mobilumtracker.SSUtils
 import com.example.mobilumtracker.databinding.FragmentCalendarBinding
 import com.example.mobilumtracker.db.Running
-import com.example.mobilumtracker.ui.event.EventFragment
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import com.example.mobilumtracker.ui.event.EventAdapter
 import kotlinx.coroutines.launch
+import ru.cleverpumpkin.calendar.CalendarDate
+import ru.cleverpumpkin.calendar.CalendarView
+import java.sql.Date
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CalendarFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CalendarFragment : Fragment() {
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var eventAdapter: EventAdapter
     private var _binding: FragmentCalendarBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var eventFragment: EventFragment
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,18 +35,72 @@ class CalendarFragment : Fragment() {
         _binding = FragmentCalendarBinding.inflate(inflater, container, false)
         val rootView = binding.root
 
-        eventFragment = childFragmentManager.findFragmentById(R.id.fragmentContainerView) as EventFragment
+        recyclerView = binding.recyclerViewEvents
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        eventAdapter = EventAdapter(emptyList())
+        recyclerView.adapter = eventAdapter
 
-        binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
-            eventFragment.loadEvents(selectedDate.toString())
+        val calendarView = binding.calendarView
+        calendarView.onDateClickListener = { date ->
+            val selectedDates = calendarView.selectedDates
+            if (selectedDates.size == 1) {
+                loadEventsForDate(SSUtils.convertToLocalDate(date.date))
+            }
         }
+        calendarView.onDateLongClickListener = { date ->
+            //TODO Move to add fragment
+            // Do something ...
+        }
+
+        calendarView.setupCalendar(
+            selectionMode = CalendarView.SelectionMode.SINGLE,
+            firstDayOfWeek = Calendar.MONDAY,
+            showYearSelectionView = false
+        )
+        getDatesIndicators(calendarView)
+
+
+
 
         return rootView
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun getDatesIndicators(calendarView: CalendarView) {
+        val indicators: MutableList<CalendarView.DateIndicator> = mutableListOf()
+        lifecycleScope.launch {
+            val events = Running.getEvents()
+            for (event in events) {
+                val nextDate = SSUtils.getTargetDate(event).format(DateTimeFormatter.ISO_DATE)
+                indicators.add(createIndicator(nextDate, Color.RED))
+                Log.d("CalendarFragment", "Added date: $nextDate")
+            }
+        }
+        if (indicators.isNotEmpty()) calendarView.datesIndicators = indicators
     }
+
+    private fun createIndicator(dateString: String, color: Int): CalendarView.DateIndicator {
+        // Parse the date string into a LocalDate
+        val date = LocalDate.parse(dateString)
+
+        // Create a CalendarDate object from the LocalDate
+        val calendarDate = CalendarDate(Date.valueOf(date.format(DateTimeFormatter.ISO_DATE)))
+
+        // Create and return the DateIndicator
+        return SimpleDateIndicator(calendarDate, color)
+    }
+
+    private fun loadEventsForDate(date: LocalDate) {
+        lifecycleScope.launch {
+            eventAdapter.loadEvents(lifecycleScope, date.format(DateTimeFormatter.ISO_LOCAL_DATE))
+            Log.d("CalendarFragment", "Selected date: ${date.format(DateTimeFormatter.ISO_LOCAL_DATE)}")
+            // jest tutaj optimalizacja ale zrobię to jak będę miał czas
+        }
+    }
+
+
+
+
 }
+class SimpleDateIndicator(override val date: CalendarDate, override val color: Int) :
+    CalendarView.DateIndicator
+

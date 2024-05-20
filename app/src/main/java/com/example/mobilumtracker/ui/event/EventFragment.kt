@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.navigation.fragment.findNavController
 import com.example.mobilumtracker.db.Event
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * A fragment representing a list of Items.
@@ -57,15 +58,7 @@ class EventFragment : Fragment() {
     }
 
 
-    fun loadEvents(date: String = "") {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val events: List<Event> = if (date.isEmpty()) {
-                Running.getEvents()
-            } else {
-                Running.getEvents(date)
-            }
-            eventAdapter.events = events
-            eventAdapter.notifyDataSetChanged()
-        }
+    fun loadEvents(date: String = "",scope: CoroutineScope = lifecycleScope) {
+        eventAdapter.loadEvents(scope,date)
     }
 }
