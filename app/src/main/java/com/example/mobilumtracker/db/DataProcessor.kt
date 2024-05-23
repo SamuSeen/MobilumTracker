@@ -65,5 +65,9 @@ class DataProcessor(context: Context,
         mileageDao.setMileage(id, mileage)
     }
 
+    suspend fun updateEvent(event: Event) = withContext(Dispatchers.IO)  {
+        eventDao.update(event)
+    }
+
 
 }

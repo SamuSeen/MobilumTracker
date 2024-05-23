@@ -1,10 +1,10 @@
 package com.example.mobilumtracker
 
 import android.content.Context
+import android.util.Log
 import com.example.mobilumtracker.db.Event
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Date
 
 class SSUtils {
@@ -37,18 +37,19 @@ class SSUtils {
             return LocalDate.of(year, month, day)
         }*/
 
-        fun convertToLocalDate(date: Date): LocalDate {
-            // Convert Date to Instant
+        fun convertDateToLocalDate(date: Date): LocalDate {
             val instant = date.toInstant()
-
-            // Convert Instant to ZonedDateTime with a default time zone
             val zonedDateTime = instant.atZone(ZoneId.systemDefault())
-
-            // Extract LocalDate from ZonedDateTime
             return zonedDateTime.toLocalDate()
         }
 
+        /**
+         * @return now if lastDate is empty
+         */
         fun getTargetDate(event: Event): LocalDate {
+            if (event.lastDate.isEmpty()) {
+                return LocalDate.now()
+            }
             return LocalDate.parse(event.lastDate).plusDays(event.days.toLong())
         }
     }

@@ -2,8 +2,8 @@
     <string name="app_name">Mobilum Tracker</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Mobilum Tracker</string>
+    <string name="nav_header_subtitle">Keep your vehicle safe</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -23,7 +23,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_calendar">Calendar</string>
-    <string name="menu_add">Add event</string>
+    <string name="menu_add">Add or edit event</string>
     <string name="description">Description</string>
     <string name="days_freqency">Frequency in days</string>
     <string name="dist_frequency">Frequency in kms.</string>

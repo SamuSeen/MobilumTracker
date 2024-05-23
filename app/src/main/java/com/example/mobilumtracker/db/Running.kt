@@ -142,5 +142,11 @@ object Running {
         return events.sortedBy { event -> event.event }
     }
 
+    fun updateEvent(event: Event) {
+        scopeDatabase?.launch {
+            dataProcessor.updateEvent(event)
+        }
+    }
+
 
 }

@@ -44,7 +44,7 @@ class CalendarFragment : Fragment() {
         calendarView.onDateClickListener = { date ->
             val selectedDates = calendarView.selectedDates
             if (selectedDates.size == 1) {
-                loadEventsForDate(SSUtils.convertToLocalDate(date.date))
+                loadEventsForDate(SSUtils.convertDateToLocalDate(date.date))
             }
         }
         calendarView.onDateLongClickListener = { date ->
@@ -57,15 +57,12 @@ class CalendarFragment : Fragment() {
             firstDayOfWeek = Calendar.MONDAY,
             showYearSelectionView = false
         )
-        getDatesIndicators(calendarView)
-
-
-
-
+        setDatesIndicators(calendarView)
+        loadEventsForDate(LocalDate.now())
         return rootView
     }
 
-    private fun getDatesIndicators(calendarView: CalendarView) {
+    private fun setDatesIndicators(calendarView: CalendarView) {
         val indicators: MutableList<CalendarView.DateIndicator> = mutableListOf()
         lifecycleScope.launch {
             val events = Running.getEvents()
@@ -74,25 +71,22 @@ class CalendarFragment : Fragment() {
                 indicators.add(createIndicator(nextDate, Color.RED))
                 Log.d("CalendarFragment", "Added date: $nextDate")
             }
+            if (indicators.isNotEmpty()) calendarView.datesIndicators = indicators.toList()
+            //Log.d("CalendarFragment", "Calendar initialized with ${calendarView.datesIndicators}")
         }
-        if (indicators.isNotEmpty()) calendarView.datesIndicators = indicators
+
     }
 
     private fun createIndicator(dateString: String, color: Int): CalendarView.DateIndicator {
-        // Parse the date string into a LocalDate
         val date = LocalDate.parse(dateString)
-
-        // Create a CalendarDate object from the LocalDate
         val calendarDate = CalendarDate(Date.valueOf(date.format(DateTimeFormatter.ISO_DATE)))
-
-        // Create and return the DateIndicator
         return SimpleDateIndicator(calendarDate, color)
     }
 
     private fun loadEventsForDate(date: LocalDate) {
         lifecycleScope.launch {
             eventAdapter.loadEvents(lifecycleScope, date.format(DateTimeFormatter.ISO_LOCAL_DATE))
-            Log.d("CalendarFragment", "Selected date: ${date.format(DateTimeFormatter.ISO_LOCAL_DATE)}")
+            //Log.d("CalendarFragment", "Selected date: ${date.format(DateTimeFormatter.ISO_LOCAL_DATE)}")
             // jest tutaj optimalizacja ale zrobię to jak będę miał czas
         }
     }
