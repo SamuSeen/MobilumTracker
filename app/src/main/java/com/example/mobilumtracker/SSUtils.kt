@@ -1,18 +1,17 @@
 package com.example.mobilumtracker
 
 import android.content.Context
-import android.util.Log
 import com.example.mobilumtracker.db.Event
+import com.example.mobilumtracker.db.Running
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
 
 class SSUtils {
-    /**
-     * @sample val greeting = getStringResource(context, R.string.greeting_message)
-     */
 
-
+    @Suppress("UNUSED")
     companion object {
         fun getStringResource(context: Context, resId: Int): String {
             return context.getString(resId)
@@ -52,5 +51,19 @@ class SSUtils {
             }
             return LocalDate.parse(event.lastDate).plusDays(event.days.toLong())
         }
+
+        fun convertLocalDateToDate(localDate: LocalDate): Long {
+            val zoneId = ZoneId.systemDefault()
+            val zonedDateTime = localDate.atStartOfDay(zoneId)
+            return Date.from(zonedDateTime.toInstant()).time - Date().time
+        }
+
+        fun initializeNotifications(context: Context, scope: CoroutineScope) {
+            scope.launch {
+                val notifications = Notifications(context)
+                notifications.scheduleNotifications(Running.getEvents())
+            }
+        }
+
     }
 }

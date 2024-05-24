@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.add.AddFragment"
     android:orientation="vertical" >
+
+    <!-- Event Name -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/event_name"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/editTextEvent"
@@ -13,8 +21,15 @@
         android:ems="10"
         android:hint="@string/event_name"
         android:importantForAutofill="no"
-        android:inputType="none"
+        android:inputType="text|textCapSentences"
         android:minHeight="48dp" />
+
+    <!-- Description -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/editTextDescription"
@@ -23,8 +38,15 @@
         android:ems="10"
         android:hint="@string/description"
         android:importantForAutofill="no"
-        android:inputType="none"
+        android:inputType="text|textCapSentences|textMultiLine"
         android:minHeight="48dp" />
+
+    <!-- Days Frequency -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/days_freqency"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/editTextDays"
@@ -33,9 +55,16 @@
         android:ems="10"
         android:hint="@string/days_freqency"
         android:importantForAutofill="no"
-        android:inputType="none"
+        android:inputType="number"
         android:minHeight="48dp"
         android:tooltipText="@string/days_freqency" />
+
+    <!-- Distance Frequency -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dist_frequency"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/editTextDistance"
@@ -44,8 +73,15 @@
         android:ems="10"
         android:hint="@string/dist_frequency"
         android:importantForAutofill="no"
-        android:inputType="none"
+        android:inputType="number"
         android:minHeight="48dp" />
+
+    <!-- Last Date -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Last_date"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/editTextLastDate"
@@ -54,9 +90,16 @@
         android:ems="10"
         android:hint="@string/Last_date"
         android:importantForAutofill="no"
-        android:inputType="none"
+        android:inputType="datetime|date"
         android:minHeight="48dp"
         tools:ignore="TextFields" />
+
+    <!-- Last Distance -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/last_mileage"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/editTextLastDistance"
@@ -65,9 +108,10 @@
         android:ems="10"
         android:hint="@string/last_mileage"
         android:importantForAutofill="no"
-        android:inputType="none"
+        android:inputType="number"
         android:minHeight="48dp" />
 
+    <!-- Toggle Button and Trigger Button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,6 +136,7 @@
 
     </LinearLayout>
 
+    <!-- Delete Button -->
     <Button
         android:id="@+id/buttonDelete"
         style="?android:attr/buttonBarButtonStyle"

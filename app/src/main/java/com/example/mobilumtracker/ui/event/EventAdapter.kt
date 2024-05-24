@@ -2,20 +2,21 @@ package com.example.mobilumtracker.ui.event
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.RecyclerView
+import com.example.mobilumtracker.R
 import com.example.mobilumtracker.SSUtils
 import com.example.mobilumtracker.databinding.ItemEventBinding
 import com.example.mobilumtracker.db.Event
 import com.example.mobilumtracker.db.Running
+import com.example.mobilumtracker.ui.calendar.CalendarFragmentDirections
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 
 class EventAdapter(private var events: List<Event>) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
@@ -26,15 +27,30 @@ class EventAdapter(private var events: List<Event>) : RecyclerView.Adapter<Event
         return EventViewHolder(binding)
     }
 
+
+
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         val event = events[position]
         holder.bind(event)
-        holder.itemView.setOnClickListener {
-            // Navigate to the add fragment with the event ID as an argument
-            val action = EventFragmentDirections.actionNavEventToNavAdd(event.id)
-            it.findNavController().navigate(action)
+        holder.itemView.setOnClickListener { view ->
+            val navController = view.findNavController()
+
+            when (navController.currentDestination?.id) {
+                R.id.nav_event -> {
+                    val action = EventFragmentDirections.actionNavEventToNavAdd(event.id)
+                    navController.navigate(action)
+                }
+                R.id.nav_calendar -> {
+                    val action = CalendarFragmentDirections.actionNavCalendarToNavAdd(event.id)
+                    navController.navigate(action)
+                }
+                else -> {
+                    Log.e("EventAdapter", "Unexpected navigation destination: ${navController.currentDestination?.id}")
+                }
+            }
         }
     }
+
 
     override fun getItemCount(): Int {
         return events.size
@@ -56,13 +72,14 @@ class EventAdapter(private var events: List<Event>) : RecyclerView.Adapter<Event
 
     inner class EventViewHolder(private val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(event: Event) {
+        fun bind(event: Event,) {
             binding.textViewEventName.text = event.event
             binding.textViewEventDescription.text = event.description
             val nextDate = SSUtils.getTargetDate(event)
-            val durationText =Duration.between(LocalDate.now().atStartOfDay(), nextDate.atStartOfDay()).toDays().toString()
+            val durationText =
+                Duration.between(LocalDate.now().atStartOfDay(), nextDate.atStartOfDay()).toDays().toString()
             binding.textViewDays.text = durationText
-            val distanceText = (event.lastDistance - event.distance).toString()
+            val distanceText = (event.lastDistance + event.distance - Running.getMileage()).toString()
             binding.textViewDistance.text = distanceText
         }
     }

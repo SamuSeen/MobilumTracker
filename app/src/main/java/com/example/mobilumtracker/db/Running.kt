@@ -28,15 +28,13 @@ object Running {
     val isInitialized: Boolean
         get() = Running::dataProcessor.isInitialized
 
-    fun init(context: Context, coroutineScope: CoroutineScope, id: Int = 0) {
+    suspend fun init(context: Context, coroutineScope: CoroutineScope, id: Int = 1) {
         scopeDatabase = coroutineScope
         dataProcessor = DataProcessor(context, coroutineScope, Config.DB_NAME.value.toString())
         setVehicle(id)
-        scopeDatabase?.launch {
-            if (dataProcessor.getEvents().isEmpty()) dataProcessor.init()
-            mileage= dataProcessor.getMileage(vehicleId)
-            Log.i("DB","Lo  aded database with "+ dataProcessor.getEvents().size+" events")
-        }
+        if (dataProcessor.getEvents().isEmpty()) dataProcessor.init()
+        mileage= dataProcessor.getMileage(vehicleId)
+        Log.i("DB","Loaded database with ${dataProcessor.getEvents().size} events and $mileage mileage for vehicle $vehicleId")
         Log.i("DB","Database initialized")
     }
 
@@ -50,11 +48,13 @@ object Running {
     fun getMileage(): Int {
         return mileage
     }
+
     fun setMileage(mileage: Int) {
         this.mileage = mileage
         scopeDatabase?.launch {
             dataProcessor.setMileage(vehicleId, mileage)
         }
+        Log.i("DB", "Mileage updated to $mileage for vehicle $vehicleId")
     }
     fun addMileage(mileage: Int) {
         val dist = this.mileage + mileage

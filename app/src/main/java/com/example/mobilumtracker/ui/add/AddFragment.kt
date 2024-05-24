@@ -1,5 +1,6 @@
 package com.example.mobilumtracker.ui.add
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
-import com.example.mobilumtracker.R
+import com.example.mobilumtracker.SSUtils
 import com.example.mobilumtracker.databinding.FragmentAddBinding
 import com.example.mobilumtracker.db.Event
 import com.example.mobilumtracker.db.Running
@@ -17,14 +18,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 /**
  * A simple [Fragment] subclass.
- * Use the [AddFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 
@@ -71,10 +66,11 @@ class AddFragment : Fragment() {
     private fun setupToggleButton() {
         binding.toggleTrigger.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                saveEvent()
-                enableEditing(false)
-            } else {
                 enableEditing(true)
+            } else {
+                saveEvent()
+                context?.let { SSUtils.initializeNotifications(it,lifecycleScope) }
+                enableEditing(false)
             }
         }
     }
@@ -112,13 +108,13 @@ class AddFragment : Fragment() {
         }
     }
 
-    private fun enableEditing(enable: Boolean) {
-        binding.editTextEvent.isEnabled = enable
-        binding.editTextDescription.isEnabled = enable
-        binding.editTextDays.isEnabled = enable
-        binding.editTextDistance.isEnabled = enable
-        binding.editTextLastDate.isEnabled = enable
-        binding.editTextLastDistance.isEnabled = enable
+    private fun enableEditing(state: Boolean) {
+        binding.editTextEvent.isEnabled = state
+        binding.editTextDescription.isEnabled = state
+        binding.editTextDays.isEnabled = state
+        binding.editTextDistance.isEnabled = state
+        binding.editTextLastDate.isEnabled = state
+        binding.editTextLastDistance.isEnabled = state
     }
 
     private fun saveEvent() {
@@ -150,6 +146,7 @@ class AddFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initializeFields() {
         binding.editTextEvent.setText("")
         binding.editTextDescription.setText("")
@@ -157,7 +154,7 @@ class AddFragment : Fragment() {
         binding.editTextDistance.setText("")
         binding.editTextLastDate.setText("")
         binding.editTextLastDistance.setText("")
-        enableEditing(true)
+        enableEditing(false)
     }
 
     override fun onDestroyView() {

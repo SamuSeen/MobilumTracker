@@ -9,34 +9,38 @@
         android:id="@+id/nav_event"
         android:name="com.example.mobilumtracker.ui.event.EventFragment"
         android:label="@string/menu_events"
-        tools:layout="@layout/fragment_event" >
+        tools:layout="@layout/fragment_event">
         <action
             android:id="@+id/action_nav_event_to_nav_add"
-            app:destination="@id/nav_add" >
+            app:destination="@id/nav_add">
             <argument
-            android:name="eventId"
-            app:argType="long" />
+                android:name="eventId"
+                app:argType="long" />
         </action>
-
     </fragment>
+
     <fragment
         android:id="@+id/nav_add"
         android:name="com.example.mobilumtracker.ui.add.AddFragment"
-        android:label="fragment_add"
-        tools:layout="@layout/fragment_add"
-        />
+        android:label="@string/menu_add"
+        tools:layout="@layout/fragment_add" />
+    <action
+        android:id="@+id/action_global_nav_add"
+        app:destination="@id/nav_add" />
+
+
     <fragment
         android:id="@+id/nav_calendar"
         android:name="com.example.mobilumtracker.ui.calendar.CalendarFragment"
-        android:label="fragment_calendar"
-        tools:layout="@layout/fragment_calendar" >
+        android:label="@string/menu_calendar"
+        tools:layout="@layout/fragment_calendar">
         <action
             android:id="@+id/action_nav_calendar_to_nav_add"
-            app:destination="@id/nav_add" />
-        <argument
-            android:name="eventId"
-            app:argType="integer" />
+            app:destination="@id/nav_add">
+            <argument
+                android:name="eventId"
+                app:argType="long" />
+        </action>
     </fragment>
-
 
 </navigation>
