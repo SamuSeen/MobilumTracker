@@ -1,80 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp">
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/textViewEventName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/event_name"
-        android:textStyle="bold"
-        android:textSize="18sp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/event_name"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0" />
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewEventDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/Lorem_Ipsum_1p"
         android:layout_marginBottom="16dp"
-        app:layout_constraintTop_toBottomOf="@id/textViewEventName"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/Lorem_Ipsum_1p"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0" />
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewEventName" />
 
-    <TextView
-        android:id="@+id/textViewRemainingInfo"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayoutCurrent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/Remaining_info"
-        app:layout_constraintTop_toBottomOf="@id/textViewEventDescription"
-        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewEventDescription"
+        android:paddingHorizontal="16dp">
+
+        <TextView
+            android:id="@+id/textViewCurrent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Current"
+            android:layout_marginEnd="16dp" />
+
+        <TextView
+            android:id="@+id/textViewLastDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Example_last_date"
+            android:layout_marginEnd="16dp" />
+
+        <TextView
+            android:id="@+id/textViewLastDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Example_last_distance"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/textViewLastDistanceKms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Kms" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/textViewRemainingInfo"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0">
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutCurrent">
+
+        <TextView
+            android:id="@+id/textViewRemaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/Remaining" />
 
         <TextView
             android:id="@+id/textViewDays"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Example_days"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="8dp"
+            android:text="@string/Example_days" />
 
         <TextView
             android:id="@+id/textViewTextDays"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Days"
-            android:layout_marginEnd="16dp" />
+            android:layout_marginEnd="16dp"
+            android:text="@string/Days" />
 
         <TextView
             android:id="@+id/textViewDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Example_distance"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="8dp"
+            android:text="@string/Example_distance" />
 
         <TextView
             android:id="@+id/textViewTextKms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/Kms" />
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,13 +2,14 @@ package com.example.mobilumtracker.ui.add
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.mobilumtracker.DateInputMask
 import com.example.mobilumtracker.SSUtils
 import com.example.mobilumtracker.databinding.FragmentAddBinding
 import com.example.mobilumtracker.db.Event
@@ -50,6 +51,7 @@ class AddFragment : Fragment() {
         setupToggleButton()
         setupDeleteButton(eventId)
         setupTriggerButton(eventId)
+        DateInputMask(binding.editTextLastDate).listen()
 
         return rootView
     }
@@ -61,6 +63,7 @@ class AddFragment : Fragment() {
         binding.editTextDistance.setText(event.distance.toString())
         binding.editTextLastDate.setText(event.lastDate)
         binding.editTextLastDistance.setText(event.lastDistance.toString())
+        enableEditing(false)
     }
 
     private fun setupToggleButton() {
@@ -154,7 +157,8 @@ class AddFragment : Fragment() {
         binding.editTextDistance.setText("")
         binding.editTextLastDate.setText("")
         binding.editTextLastDistance.setText("")
-        enableEditing(false)
+        binding.toggleTrigger.isChecked=true
+        enableEditing(true)
     }
 
     override fun onDestroyView() {

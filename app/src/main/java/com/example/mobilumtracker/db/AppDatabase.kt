@@ -2,8 +2,9 @@ package com.example.mobilumtracker.db
 
 import android.content.Context
 import android.util.Log
-import androidx.room.*
-import androidx.room.migration.Migration
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +17,7 @@ import kotlinx.coroutines.withContext
 @Database(entities = [
     Event::class,
     Mileage::class],
-    version = 46,
+    version = 47,
     exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
@@ -81,7 +82,6 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     dbname
                 )
-                    .addMigrations(MIGRATION_43_44)
                     .fallbackToDestructiveMigration()
                     .addCallback(DatabaseCallback(scope))
                     .build()
@@ -94,14 +94,7 @@ abstract class AppDatabase : RoomDatabase() {
 
 }
 
-val MIGRATION_43_44 = object : Migration(43, 44) {
-    override fun migrate(db: SupportSQLiteDatabase) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS `Event_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Event` TEXT NOT NULL, `Days` INTEGER NOT NULL, `LastDate` TEXT NOT NULL, `Distance` INTEGER NOT NULL, `LastDistance` INTEGER NOT NULL, `Description` TEXT NOT NULL)")
-        db.execSQL("INSERT INTO `Event_new` (`id`, `Event`, `Days`, `LastDate`, `Distance`, `LastDistance`, `Description`) SELECT `id`, `Event`, `Days`, `LastTime`, `Distance`, `LastDistance`, `Description` FROM `Event`")
-        db.execSQL("DROP TABLE IF EXISTS `Event`")
-        db.execSQL("ALTER TABLE `Event_new` RENAME TO `Event`")
-    }
-}
+
 
 /*use for returned elements
 data class NameTuple(

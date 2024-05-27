@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
 import java.sql.Date
+import java.time.Duration
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -67,9 +68,16 @@ class CalendarFragment : Fragment() {
         lifecycleScope.launch {
             val events = Running.getEvents()
             for (event in events) {
-                val nextDate = SSUtils.getTargetDate(event).format(DateTimeFormatter.ISO_DATE)
-                indicators.add(createIndicator(nextDate, Color.RED))
-                Log.d("CalendarFragment", "Added date: $nextDate")
+                val targetDate = SSUtils.getTargetDate(event)
+                val remainingDistance =
+                    Duration.between(LocalDate.now().atStartOfDay(), targetDate.atStartOfDay()).toDays()
+                val indicatorColor = when {
+                    targetDate.isBefore(LocalDate.now()) || remainingDistance <= 0 -> Color.RED
+                    targetDate.isBefore(LocalDate.now().plusDays(7)) || remainingDistance <= 300 -> Color.BLACK
+                    else -> Color.BLUE
+                }
+                indicators.add(createIndicator(targetDate.format(DateTimeFormatter.ISO_DATE), indicatorColor))
+                Log.d("CalendarFragment", "Added date: ${targetDate.format(DateTimeFormatter.ISO_DATE)}")
             }
             if (indicators.isNotEmpty()) calendarView.datesIndicators = indicators.toList()
             //Log.d("CalendarFragment", "Calendar initialized with ${calendarView.datesIndicators}")

@@ -83,12 +83,13 @@
         android:text="@string/Last_date"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+
     <EditText
         android:id="@+id/editTextLastDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/Last_date"
+        android:hint="@string/DateFormat"
         android:importantForAutofill="no"
         android:inputType="datetime|date"
         android:minHeight="48dp"

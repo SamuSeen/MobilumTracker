@@ -75,6 +75,8 @@ class EventAdapter(private var events: List<Event>) : RecyclerView.Adapter<Event
         fun bind(event: Event,) {
             binding.textViewEventName.text = event.event
             binding.textViewEventDescription.text = event.description
+            binding.textViewLastDistance.text = event.lastDistance.toString()
+            binding.textViewLastDate.text = event.lastDate
             val nextDate = SSUtils.getTargetDate(event)
             val durationText =
                 Duration.between(LocalDate.now().atStartOfDay(), nextDate.atStartOfDay()).toDays().toString()

@@ -1,6 +1,9 @@
 package com.example.mobilumtracker
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 import com.example.mobilumtracker.db.Event
 import com.example.mobilumtracker.db.Running
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +52,12 @@ class SSUtils {
             if (event.lastDate.isEmpty()) {
                 return LocalDate.now()
             }
-            return LocalDate.parse(event.lastDate).plusDays(event.days.toLong())
+            try {
+                return LocalDate.parse(event.lastDate).plusDays(event.days.toLong())
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return LocalDate.now()
+            }
         }
 
         fun convertLocalDateToDate(localDate: LocalDate): Long {
@@ -65,5 +73,67 @@ class SSUtils {
             }
         }
 
+    }
+}
+
+/**
+ * Date Watcher class for EditText
+ * @sample DateInputMask(binding.editTextLastDate).listen()
+ * Inspired by a Google dev
+ */
+class DateInputMask(val input : EditText) {
+
+    fun listen() {
+        input.addTextChangedListener(mDateEntryWatcher)
+    }
+
+    private val mDateEntryWatcher = object : TextWatcher {
+
+        var edited = false
+        val dividerCharacter = "/"
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            if (edited) {
+                edited = false
+                return
+            }
+
+            var working = getEditText()
+
+            working = manageDateDivider(working, 4, start, before)
+            working = manageDateDivider(working, 7, start, before)
+
+            edited = true
+            input.setText(working)
+            input.setSelection(input.text.length)
+        }
+
+        /**
+         * Manage the divider character
+         * modified to YYYY/MM/DD format
+         */
+        private fun manageDateDivider(working: String, position: Int, start: Int, before: Int): String {
+            if (working.length == position) {
+                return if (before <= position && start < position)
+                    working + dividerCharacter
+                else
+                    working.dropLast(1)
+            }
+            return working
+        }
+
+        /**
+         * Get the EditText text
+         * modified to YYYY/MM/DD format
+         */
+        private fun getEditText(): String {
+            return if (input.text.length >= 10)
+                input.text.toString().substring(0, 10)
+            else
+                input.text.toString()
+        }
+
+        override fun afterTextChanged(s: Editable) {}
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
     }
 }

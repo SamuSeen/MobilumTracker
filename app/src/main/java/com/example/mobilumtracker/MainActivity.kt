@@ -1,8 +1,12 @@
 package com.example.mobilumtracker
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -16,6 +20,7 @@ import com.example.mobilumtracker.databinding.ActivityMainBinding
 import com.example.mobilumtracker.db.Running
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,12 +36,20 @@ class MainActivity : AppCompatActivity() {
             binding.appBarMain.editTextMileage.setText(initialMileage.toString())
             binding.appBarMain.editTextMileage.setOnFocusChangeListener { view, hasFocus ->
                 if (!hasFocus) {
-                    val newMileage = binding.appBarMain.editTextMileage.text.toString().toIntOrNull() ?: 0
-                    Running.setMileage(newMileage)
-                    binding.appBarMain.editTextMileage.setText(newMileage.toString())
-                    view.clearFocus() // Remove focus from EditText
+                    updateMileage(view)
                 }
             }
+            binding.appBarMain.editTextMileage.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    updateMileage(v)
+                    v.clearFocus() // Remove focus from EditText
+                    true
+                } else {
+                    false
+                }
+            }
+
+
         }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -91,5 +104,17 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun updateMileage(view: View) {
+        val newMileage = binding.appBarMain.editTextMileage.text.toString().toIntOrNull() ?: 0
+        Running.setMileage(newMileage)
+        binding.appBarMain.editTextMileage.setText(newMileage.toString())
+        // Hide the keyboard
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        // Restart the activity to update the mileage
+        finish()
+        startActivity(intent)
     }
 }

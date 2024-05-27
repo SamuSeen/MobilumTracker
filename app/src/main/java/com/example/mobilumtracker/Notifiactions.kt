@@ -39,11 +39,8 @@ class Notifications(private val context: Context) {
 
         events.forEach { event ->
             val targetDate = SSUtils.getTargetDate(event)
-            val timeDifference = getTimeDifference(targetDate)
-            if (timeDifference in 1..6) {
-                val notification = buildNotification(event, targetDate)
-                notificationManager.notify(event.id.toInt(), notification)
-            }
+            val notification = buildNotification(event, targetDate)
+            notificationManager.notify(event.id.toInt(), notification)
         }
 
         schedulePeriodicWork()
@@ -52,12 +49,6 @@ class Notifications(private val context: Context) {
     fun clearNotifications() {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancelAll() // Clear all existing notifications
-    }
-
-    // Helper function to calculate time difference in days
-    private fun getTimeDifference(eventDate: LocalDate): Long {
-        val currentTime = LocalDate.now()
-        return eventDate.toEpochDay() - currentTime.toEpochDay()
     }
 
     private fun createNotificationChannel() {
@@ -84,7 +75,7 @@ class Notifications(private val context: Context) {
             context,
             event.id.toInt(),
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)

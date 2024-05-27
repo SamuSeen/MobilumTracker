@@ -36,4 +36,9 @@
     <string name="edit_mileage">Edit Mileage</string>
     <string name="current_mileage">Current Mileage:</string>
     <string name="back">Back</string>
+    <string name="Example_last_distance">20000</string>
+    <string name="Example_last_date">12/12/1212</string>
+    <string name="Current">Current:</string>
+    <string name="Remaining">Remaining:</string>
+    <string name="DateFormat">YYYY/mm/DD</string>
 </resources>
