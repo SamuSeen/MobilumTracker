@@ -55,7 +55,7 @@
         android:layout_marginBottom="16dp"
         android:layout_gravity="bottom|end"
         android:contentDescription="@string/back"
-        android:src="@android:drawable/ic_dialog_email"
+        android:src="@drawable/calendar_ic_arrow_left"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

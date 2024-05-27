@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".ui.calendar.CalendarFragment">
 
@@ -10,7 +11,8 @@
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        app:calendar_date_text_color="?android:attr/textColorPrimary"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewEvents"

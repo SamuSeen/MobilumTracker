@@ -90,7 +90,7 @@ class DateInputMask(val input : EditText) {
     private val mDateEntryWatcher = object : TextWatcher {
 
         var edited = false
-        val dividerCharacter = "/"
+        val dividerCharacter = "-"
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             if (edited) {
