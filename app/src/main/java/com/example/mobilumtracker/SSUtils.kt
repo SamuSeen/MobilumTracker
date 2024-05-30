@@ -12,14 +12,23 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
 
+/**
+ * Static methods for SSUtils
+ */
 class SSUtils {
 
     @Suppress("UNUSED")
     companion object {
+        /**
+         * Get string resource from context
+         */
         fun getStringResource(context: Context, resId: Int): String {
             return context.getString(resId)
         }
 
+        /**
+         * Calculate dates from lastDate and days
+         */
         fun calculateDates(lastDate: LocalDate, days: Int): List<LocalDate> {
             val dates = mutableListOf<LocalDate>()
             var currentDate = lastDate
@@ -39,6 +48,9 @@ class SSUtils {
             return LocalDate.of(year, month, day)
         }*/
 
+        /**
+         * Convert Date to LocalDate
+         */
         fun convertDateToLocalDate(date: Date): LocalDate {
             val instant = date.toInstant()
             val zonedDateTime = instant.atZone(ZoneId.systemDefault())
@@ -60,17 +72,31 @@ class SSUtils {
             }
         }
 
+        /**
+         * Convert LocalDate to Date
+         */
         fun convertLocalDateToDate(localDate: LocalDate): Long {
             val zoneId = ZoneId.systemDefault()
             val zonedDateTime = localDate.atStartOfDay(zoneId)
             return Date.from(zonedDateTime.toInstant()).time - Date().time
         }
 
+        /**
+         * Initialize notifications
+         */
         fun initializeNotifications(context: Context, scope: CoroutineScope) {
             scope.launch {
                 val notifications = Notifications(context)
                 notifications.scheduleNotifications(Running.getEvents())
             }
+        }
+
+        /**
+         * Get the time difference between the current date and the event date.
+         */
+        fun getTimeDifference(eventDate: LocalDate): Long {
+            val currentTime = LocalDate.now()
+            return eventDate.toEpochDay() - currentTime.toEpochDay()
         }
 
     }
@@ -92,6 +118,9 @@ class DateInputMask(val input : EditText) {
         var edited = false
         val dividerCharacter = "-"
 
+        /**
+         * Modified to YYYY/MM/DD format
+         */
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             if (edited) {
                 edited = false
@@ -110,7 +139,7 @@ class DateInputMask(val input : EditText) {
 
         /**
          * Manage the divider character
-         * modified to YYYY/MM/DD format
+         * Modified to YYYY/MM/DD format
          */
         private fun manageDateDivider(working: String, position: Int, start: Int, before: Int): String {
             if (working.length == position) {

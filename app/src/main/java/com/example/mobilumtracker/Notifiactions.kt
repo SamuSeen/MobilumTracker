@@ -22,13 +22,14 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
-
+/**
+ * Class for managing notifications for events.
+ */
 class Notifications(private val context: Context) {
 
-    companion object {
-        const val CHANNEL_ID = "EventNotifications"
-    }
-
+    /**
+     * Schedule notifications for events that are upcoming.
+     */
     fun scheduleNotifications(events: List<Event>) {
         val notificationManager = ContextCompat.getSystemService(
             context,
@@ -39,38 +40,50 @@ class Notifications(private val context: Context) {
 
         events.forEach { event ->
             val targetDate = SSUtils.getTargetDate(event)
-            val notification = buildNotification(event, targetDate)
-            notificationManager.notify(event.id.toInt(), notification)
+            val timeDifference = SSUtils.getTimeDifference(targetDate)
+            if (timeDifference <= 7 || event.lastDistance+event.distance<=Running.getMileage()+1000) {
+                val notification = buildNotification(event, targetDate)
+                notificationManager.notify(event.id.toInt(), notification)
+            }
         }
 
         schedulePeriodicWork()
     }
 
+    /**
+     * Clear all existing notifications.
+     */
     fun clearNotifications() {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancelAll() // Clear all existing notifications
     }
 
+    /**
+     * Create a notification channel for Android 8.0 and above.
+     */
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
-            CHANNEL_ID,
+            Config.CHANNEL_ID.value.toString(),
             "Event com.example.mobilumtracker.Notifications",
             NotificationManager.IMPORTANCE_DEFAULT
         )
-        channel.description = "com.example.mobilumtracker.Notifications for upcoming events"
+        channel.description = "Mobilum Tracker Notifications for upcoming events"
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 
 
+    /**
+     * Build a notification for the upcoming event.
+     */
     private fun buildNotification(event: Event, eventDate: LocalDate): Notification {
         val intent = Intent(context, MainActivity::class.java)
         intent.action = "android.intent.action.MAIN"
         intent.addCategory("android.intent.category.LAUNCHER")
         intent.putExtra("eventId", event.id)
 
-// Create a PendingIntent to navigate to the AddFragment
+        // TODO Create a PendingIntent to navigate to the AddFragment
         val pendingIntent = PendingIntent.getActivity(
             context,
             event.id.toInt(),
@@ -78,16 +91,19 @@ class Notifications(private val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
-        val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+        val notificationBuilder = NotificationCompat.Builder(context, Config.CHANNEL_ID.value.toString())
             .setContentTitle("Upcoming Event: ${event.event}")
             .setContentText("Event Date: $eventDate")
-            .setSmallIcon(R.mipmap.ic_launcher_round)
+            .setSmallIcon(R.mipmap.logo_main_colour_round)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
         return notificationBuilder.build()
     }
 
+    /**
+     * Schedule a periodic work request to run the notification worker.
+     */
     private fun schedulePeriodicWork() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -102,9 +118,10 @@ class Notifications(private val context: Context) {
     }
 }
 
-class NotificationWorker(context: Context, params: WorkerParameters) :
-    CoroutineWorker(context, params) {
-
+/**
+ * Worker class for scheduling notifications.
+ */
+class NotificationWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
             try {

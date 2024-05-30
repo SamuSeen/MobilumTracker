@@ -41,4 +41,8 @@
     <string name="Current">Current:</string>
     <string name="Remaining">Remaining:</string>
     <string name="DateFormat">YYYY/mm/DD</string>
+    <string name="action_sort_id">Sort by ID</string>
+    <string name="action_sort_time">Sort by time</string>
+    <string name="action_sort_distance">Sort by distance</string>
+    <string name="action_sort_alphabet">Sort alphabetically</string>
 </resources>

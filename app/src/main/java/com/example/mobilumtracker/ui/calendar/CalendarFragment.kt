@@ -73,7 +73,7 @@ class CalendarFragment : Fragment() {
                     Duration.between(LocalDate.now().atStartOfDay(), targetDate.atStartOfDay()).toDays()
                 val indicatorColor = when {
                     targetDate.isBefore(LocalDate.now()) || remainingDistance <= 0 -> Color.RED
-                    targetDate.isBefore(LocalDate.now().plusDays(7)) || remainingDistance <= 300 -> Color.BLACK
+                    targetDate.isBefore(LocalDate.now().plusDays(7)) || remainingDistance <= 1000 -> Color.BLACK
                     else -> Color.BLUE
                 }
                 indicators.add(createIndicator(targetDate.format(DateTimeFormatter.ISO_DATE), indicatorColor))
