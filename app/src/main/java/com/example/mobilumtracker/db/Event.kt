@@ -1,6 +1,16 @@
 package com.example.mobilumtracker.db
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.PrimaryKey
+import androidx.room.Query
+import androidx.room.Update
 
+/**
+ * Table for events
+ */
 @Entity
 data class Event(
     @ColumnInfo(name = "Event") val event: String,

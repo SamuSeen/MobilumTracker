@@ -2,8 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_sort_id"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/action_sort_id"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sort_time"
+        android:orderInCategory="101"
+        android:title="@string/action_sort_time"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sort_distance"
+        android:orderInCategory="102"
+        android:title="@string/action_sort_distance"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sort_alphabet"
+        android:orderInCategory="103"
+        android:title="@string/action_sort_alphabet"
         app:showAsAction="never" />
 </menu>

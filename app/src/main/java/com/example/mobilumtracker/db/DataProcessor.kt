@@ -7,8 +7,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 
-/** A class for executing operations on database
- *
+/**
+ *  A class for executing operations on database
  */
 class DataProcessor(context: Context,
                     databaseScope: CoroutineScope,
@@ -18,7 +18,7 @@ class DataProcessor(context: Context,
     private val mileageDao=db.mileageDao()
 
     suspend fun init() = withContext(Dispatchers.IO) {
-        Log.i("DB","Database initialization")
+        Log.i("DB","Database initialization with example database")
         eventDao.insertAll(
             Event(
                 "Przegląd",

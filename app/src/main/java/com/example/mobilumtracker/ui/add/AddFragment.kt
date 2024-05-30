@@ -10,7 +10,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.mobilumtracker.DateInputMask
-import com.example.mobilumtracker.SSUtils
 import com.example.mobilumtracker.databinding.FragmentAddBinding
 import com.example.mobilumtracker.db.Event
 import com.example.mobilumtracker.db.Running
@@ -72,7 +71,6 @@ class AddFragment : Fragment() {
                 enableEditing(true)
             } else {
                 saveEvent()
-                context?.let { SSUtils.initializeNotifications(it,lifecycleScope) }
                 enableEditing(false)
             }
         }

@@ -8,6 +8,9 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
 
+/**
+ * Table for Mileage
+ */
 @Entity
 data class Mileage(
     @ColumnInfo(name = "Mileage") val mileage: Int,

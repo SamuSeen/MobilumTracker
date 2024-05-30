@@ -12,12 +12,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
+ * Main database class
  * Tablice to clasy z @Entity
  */
 @Database(entities = [
     Event::class,
     Mileage::class],
-    version = 47,
+    version = 48,
     exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
@@ -82,6 +83,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     dbname
                 )
+                    .addMigrations(MIGRATION_43_44)
                     .fallbackToDestructiveMigration()
                     .addCallback(DatabaseCallback(scope))
                     .build()

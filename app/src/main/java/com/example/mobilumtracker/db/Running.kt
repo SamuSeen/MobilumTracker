@@ -8,15 +8,16 @@ import android.util.Log
 import com.example.mobilumtracker.Config
 import com.example.mobilumtracker.SSUtils
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import java.time.LocalDate
-import kotlin.coroutines.resume
 import java.time.Duration
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.coroutines.resume
 
-@OptIn(ExperimentalCoroutinesApi::class)
+/**
+ * Main object holding session information
+ */
 object Running {
     //to jest uruchamiane na application context nie activity context
     @SuppressLint("StaticFieldLeak")
@@ -24,6 +25,7 @@ object Running {
     private var scopeDatabase: CoroutineScope? = null
     private var mileage = 0
     private var vehicleId = 0
+    private var sortMode = 0
 
     val isInitialized: Boolean
         get() = Running::dataProcessor.isInitialized
@@ -36,6 +38,7 @@ object Running {
         mileage= dataProcessor.getMileage(vehicleId)
         Log.i("DB","Loaded database with ${dataProcessor.getEvents().size} events and $mileage mileage for vehicle $vehicleId")
         Log.i("DB","Database initialized")
+        SSUtils.initializeNotifications(context, coroutineScope)
     }
 
     fun setVehicle(id:Int ){
@@ -75,10 +78,19 @@ object Running {
         }
     }
 
+    fun setSortMode(mode: Int) {
+        if (mode < 0 || mode > 3) return
+        sortMode = mode
+    }
+
+    fun getSortMode(): Int {
+        return sortMode
+    }
+
     /**
      * @param sort 0 - id, 1 - time remaining, 2 - distance remaining, 3 - alphabetically
      */
-    suspend fun getEvents(sort: Int = 0): List<Event> = suspendCancellableCoroutine { continuation ->
+    suspend fun getEvents(sort: Int = sortMode): List<Event> = suspendCancellableCoroutine { continuation ->
         scopeDatabase?.launch {
             val events: List<Event> = dataProcessor.getEvents()
             val sortedEvents = when (sort) {

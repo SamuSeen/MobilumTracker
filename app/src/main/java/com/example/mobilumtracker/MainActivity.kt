@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -101,11 +103,44 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    /**
+     * Menu item click listener
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return when (item.itemId) {
+            R.id.action_sort_id -> {
+                Running.setSortMode(0)
+                refreshCurrentFragment(navController)
+                true
+            }
+            R.id.action_sort_time -> {
+                Running.setSortMode(1)
+                refreshCurrentFragment(navController)
+                true
+            }
+            R.id.action_sort_distance -> {
+                Running.setSortMode(2)
+                refreshCurrentFragment(navController)
+                true
+            }
+            R.id.action_sort_alphabet -> {
+                Running.setSortMode(3)
+                refreshCurrentFragment(navController)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    /**
+     * Update mileage
+     */
     private fun updateMileage(view: View) {
         val newMileage = binding.appBarMain.editTextMileage.text.toString().toIntOrNull() ?: 0
         Running.setMileage(newMileage)
@@ -114,7 +149,24 @@ class MainActivity : AppCompatActivity() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
         // Restart the activity to update the mileage
-        finish()
-        startActivity(intent)
+        /*finish()
+        startActivity(intent)*/
+        // Restart the fragment instead
+        refreshCurrentFragment(findNavController(R.id.nav_host_fragment_content_main))
+    }
+
+    /**
+     * Refresh the current fragment
+     */
+    private fun refreshCurrentFragment(navController: NavController) {
+        val currentDestination = navController.currentDestination
+        currentDestination?.let {
+            navController.navigate(it.id)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        SSUtils.initializeNotifications(this, lifecycleScope)
     }
 }
